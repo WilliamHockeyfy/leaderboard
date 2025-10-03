@@ -1,5 +1,5 @@
-import {leaderboardRepository } from '../repositories/leaderboardRepository';
-import { LeaderboardUser } from '../models/LeaderboardUser';
+import { leaderboardRepository } from "../repositories/leaderboardRepository";
+import { LeaderboardUser } from "../models/LeaderboardUser";
 
 /**
  * LeaderboardService class
@@ -12,8 +12,23 @@ export class LeaderboardService {
    * Get all users from the leaderboard
    * @returns {Promise<LeaderboardUser[]>} All users in the leaderboard
    */
+  /* deprecated with the implementation of subscribeToLeaderboard
   async getAllUsers(): Promise<LeaderboardUser[]> {
     return await leaderboardRepository.getAll();
+  }
+  */
+
+  /**
+   * Subscribe to leaderboard database.
+   * @param {LeaderboardUser[]} users - The users
+   * @param {Error} error - potential error.
+   * @returns {() => void} - The unsubscribe function.
+   */
+  subscribeToLeaderboard(
+    callback: (users: LeaderboardUser[]) => void,
+    onError?: (error: Error) => void,
+  ): () => void {
+    return leaderboardRepository.subscribeToLeaderboard(callback, onError);
   }
 
   /**
@@ -25,4 +40,8 @@ export class LeaderboardService {
   }
 }
 
+/**
+ * Singleton instance of LeaderboardService for business logic operations
+ * @type {LeaderboardService}
+ */
 export const leaderboardService = new LeaderboardService();

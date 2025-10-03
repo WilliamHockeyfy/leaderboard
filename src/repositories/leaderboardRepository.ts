@@ -1,6 +1,6 @@
-import firestore from '@react-native-firebase/firestore';
-import { LeaderboardUser } from '../models/LeaderboardUser';
-import mockData from '../../assets/data/MOCK_DATA.json';
+import firestore from "@react-native-firebase/firestore";
+import { LeaderboardUser } from "../models/LeaderboardUser";
+import mockData from "../../assets/data/MOCK_DATA.json";
 
 /**
  * LeaderboardRepository class, resposible for direct communcation with the database.
@@ -9,12 +9,13 @@ import mockData from '../../assets/data/MOCK_DATA.json';
  * @returns {Promise<LeaderboardUser[]>} All users in the leaderboard
  */
 export class LeaderboardRepository {
-  private collection = firestore().collection('leaderboard');
+  private collection = firestore().collection("leaderboard");
 
   /**
    * Get all users from the leaderboard
    * @returns {Promise<LeaderboardUser[]>} All users in the leaderboard
    */
+  /* deprecated with the implementation of subscribeToLeaderboard
   async getAll(): Promise<LeaderboardUser[]> {
     try {
       const snapshot = await this.collection
@@ -25,10 +26,44 @@ export class LeaderboardRepository {
           id: doc.id,
           ...doc.data(),
       })) as LeaderboardUser[];
+
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
       throw new Error('Failed to fetch leaderboard data');
     }
+  }
+*/
+
+  /**
+   * Subscribes to leaderboard database.
+   * @param {LeaderboardUser[]} users - The users
+   * @param {Error} error - potential error.
+   * @returns {() => void} - The unsubscribe function.
+   */
+  subscribeToLeaderboard(
+    callback: (users: LeaderboardUser[]) => void,
+    onError?: (error: Error) => void,
+  ): () => void {
+    const unsubscribe = this.collection.orderBy("score", "desc").onSnapshot(
+      (snapshot) => {
+        const users = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as LeaderboardUser[];
+        callback(users);
+      },
+      (error) => {
+        console.error("Error for leaderboard listener:", error);
+        const firebaseError = new Error(
+          "Failed to listen to leaderboard updates",
+        );
+        if (onError) {
+          onError(firebaseError);
+        }
+      },
+    );
+
+    return unsubscribe;
   }
 
   /**
@@ -38,7 +73,6 @@ export class LeaderboardRepository {
    */
   async setDatabase(): Promise<void> {
     try {
-
       const snapshot = await this.collection.get();
       const batch = firestore().batch();
       snapshot.docs.forEach((doc) => {
@@ -47,12 +81,14 @@ export class LeaderboardRepository {
       await batch.commit();
 
       // cast mock data to LeaderboardUser format
-      const leaderboardUsers: LeaderboardUser[] = Object.entries(mockData).map(([id, userData]) => ({
-        id,
-        username: userData.username,
-        score: userData.score,
-        avatar: userData.avatar
-      }));
+      const leaderboardUsers: LeaderboardUser[] = Object.entries(mockData).map(
+        ([id, userData]) => ({
+          id,
+          username: userData.username,
+          score: userData.score,
+          avatar: userData.avatar,
+        }),
+      );
 
       // Add mock data to database
       const addBatch = firestore().batch();
@@ -61,18 +97,21 @@ export class LeaderboardRepository {
         addBatch.set(docRef, {
           username: user.username,
           score: user.score,
-          avatar: user.avatar
+          avatar: user.avatar,
         });
       });
 
       await addBatch.commit();
-      console.log('Database set to mock data successfully');
+      console.log("Database set to mock data successfully");
     } catch (error) {
-      console.error('Error setting database to mock data:', error);
-      throw new Error('Failed to set database to mock data');
+      console.error("Error setting database to mock data:", error);
+      throw new Error("Failed to set database to mock data");
     }
   }
-
 }
 
+/**
+ * Singleton instance of LeaderboardRepository for database operations
+ * @type {LeaderboardRepository}
+ */
 export const leaderboardRepository = new LeaderboardRepository();

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { leaderboardService } from '../services/leaderboardService';
-import { LeaderboardUser } from '../models/LeaderboardUser';
+import { useState, useEffect, useCallback } from "react";
+import { leaderboardService } from "../services/leaderboardService";
+import { LeaderboardUser } from "../models/LeaderboardUser";
 
 /**
  * useLeaderboard hook
@@ -12,6 +12,7 @@ export const useLeaderboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [settingDatabase, setSettingDatabase] = useState(false);
 
+  /* deprecated with the implementation of subscribeToLeaderboard
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -24,31 +25,71 @@ export const useLeaderboard = () => {
       setLoading(false);
     }
   };
+*/
+  /**
+   * Handle realtime update
+   * @param {LeaderboardUser[]} updatedUsers - The most recent users.
+   */
+  const handleRealtimeUpdate = useCallback(
+    (updatedUsers: LeaderboardUser[]) => {
+      setUsers(updatedUsers);
+      setLoading(false);
+      setError(null);
+    },
+    [],
+  );
 
+  /**
+   * Handle error, sets error state and loading state to false.
+   * @param {Error} error - The error
+   */
+  const handleError = useCallback((error: Error) => {
+    setError(error.message);
+    setLoading(false);
+  }, []);
+
+  /**
+   * hard sets database to mock data.
+   */
   const setDatabaseToMockData = async () => {
     try {
       setSettingDatabase(true);
       setError(null);
       await leaderboardService.setDatabaseToMockData();
-
-      await fetchUsers(); //refresh, maybe remove when liveupdates are implemented.
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to set database to mock data');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to set database to mock data",
+      );
     } finally {
       setSettingDatabase(false);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    setLoading(true);
+    /**
+     * Subscribes to leaderboard.
+     * @param {LeaderboardUser[]} updatedUsers - The most recent users.
+     * @param {Error} error - The error
+     */
+    const unsubscribe = leaderboardService.subscribeToLeaderboard(
+      handleRealtimeUpdate,
+      handleError,
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [handleRealtimeUpdate, handleError]);
 
   return {
     users,
     loading,
     error,
     settingDatabase,
-    refetch: fetchUsers,
+
     setDatabaseToMockData,
   };
 };
