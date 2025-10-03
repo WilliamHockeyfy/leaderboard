@@ -1,19 +1,35 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
+/**
+ * LeaderboardTileProps interface
+ * @interface LeaderboardTileProps
+ * @property {number} score - The score of the user
+ * @property {string} name - The name of the user
+ * @property {number} avatar - The avatar of the user
+ * @property {number} ranking - The ranking of the user
+ */
 interface LeaderboardTileProps {
   score: number;
   name: string;
-  avatar?: number; // nummerID för Pravatar avatarer, pga ingen firebase storage.
+  avatar?: number; // Number ID for Pravatar avatars, as a workaround for lack of firebase storage.
   ranking?: number; 
 }
 
+/**
+ * LeaderboardTile component
+ * @param {LeaderboardTileProps} props - The props for the LeaderboardTile component
+ * @param {number} props.score - The score of the user
+ * @param {string} props.name - The name of the user
+ * @param {number} props.avatar - The avatar of the user
+ * @param {number} props.ranking - The ranking of the user
+ * @returns {JSX.Element} The LeaderboardTile component
+ */
 export default function LeaderboardTile(props: LeaderboardTileProps) {
   const { score = 100, name = "John Doe", avatar = 1, ranking = 1 } = props;
 
   return (
     <View style={styles.container}>
-
 
       <View style={styles.rankingContainer}>
         <Text style={styles.text}>{ranking}</Text>
@@ -21,6 +37,9 @@ export default function LeaderboardTile(props: LeaderboardTileProps) {
 
       <View style={styles.AvatarContainer}>
         <Image 
+          // We just use a users saved number to retreive a users avatar. 
+          // This doesnt work forever, at a certain amount of users this will break.
+          // TODO: atleast a failsafe for when ID is too high.
           source={{ uri: `https://i.pravatar.cc/150?img=${avatar}` }}
           style={styles.avatarImage}
           resizeMode="cover"
