@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button,ActivityIndicator } from 'react-native';
 import LeaderboardList from './src/components/Leaderboard/leaderboardList';
 import { useLeaderboard } from './src/hooks/useLeaderboard';
 
@@ -8,7 +8,7 @@ import { useLeaderboard } from './src/hooks/useLeaderboard';
  * @returns {JSX.Element} The App component
  */
 export default function App() {
-    const { users, loading, error, refetch } = useLeaderboard();
+    const { users, loading, error, refetch, setDatabaseToMockData, settingDatabase} = useLeaderboard();
 
     if (loading) {
         return (
@@ -33,7 +33,14 @@ export default function App() {
         <View style={styles.container}>
             <Text style={styles.Title}>Leaderboard</Text>
             <LeaderboardList users={users} />
+            <Button
+                title="Set Database to Mock Data"
+                onPress={setDatabaseToMockData}
+                disabled={settingDatabase}
+            />
         </View>
+
+
     );
 }
 

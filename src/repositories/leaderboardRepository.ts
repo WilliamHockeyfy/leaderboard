@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import { LeaderboardUser } from '../models/LeaderboardUser';
+import mockData from '../../assets/data/MOCK_DATA.json';
 
 /**
  * LeaderboardRepository class, resposible for direct communcation with the database.
@@ -27,6 +28,48 @@ export class LeaderboardRepository {
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
       throw new Error('Failed to fetch leaderboard data');
+    }
+  }
+
+  /**
+   * Hard sets the database to the mock data by clearing existing data and adding mock data.
+   * for debugging purposes.
+   * @returns {Promise<void>} Promise that resolves when database is set
+   */
+  async setDatabase(): Promise<void> {
+    try {
+
+      const snapshot = await this.collection.get();
+      const batch = firestore().batch();
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+
+      // cast mock data to LeaderboardUser format
+      const leaderboardUsers: LeaderboardUser[] = Object.entries(mockData).map(([id, userData]) => ({
+        id,
+        username: userData.username,
+        score: userData.score,
+        avatar: userData.avatar
+      }));
+
+      // Add mock data to database
+      const addBatch = firestore().batch();
+      leaderboardUsers.forEach((user) => {
+        const docRef = this.collection.doc(user.id);
+        addBatch.set(docRef, {
+          username: user.username,
+          score: user.score,
+          avatar: user.avatar
+        });
+      });
+
+      await addBatch.commit();
+      console.log('Database set to mock data successfully');
+    } catch (error) {
+      console.error('Error setting database to mock data:', error);
+      throw new Error('Failed to set database to mock data');
     }
   }
 

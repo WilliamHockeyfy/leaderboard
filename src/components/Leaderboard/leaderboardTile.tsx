@@ -12,7 +12,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 interface LeaderboardTileProps {
   score: number;
   name: string;
-  avatar?: number; // Number ID for Pravatar avatars, as a workaround for lack of firebase storage.
+  avatar?: number; // Number seed for dicebear avatars now. Uses seed instead of ID and can basically go infinitely.
   ranking?: number; 
 }
 
@@ -38,9 +38,7 @@ export default function LeaderboardTile(props: LeaderboardTileProps) {
       <View style={styles.AvatarContainer}>
         <Image 
           // We just use a users saved number to retreive a users avatar. 
-          // This doesnt work forever, at a certain amount of users this will break.
-          // TODO: atleast a failsafe for when ID is too high.
-          source={{ uri: `https://i.pravatar.cc/150?img=${avatar}` }}
+          source={{ uri: `https://api.dicebear.com/7.x/pixel-art/png?seed=${avatar}` }}
           style={styles.avatarImage}
           resizeMode="cover"
         />
