@@ -32,25 +32,27 @@ export default function LeaderboardTile(
 
   return (
     <View style={styles.container}>
-      <View style={styles.rankingContainer}>
-        <Text style={styles.text}>{ranking}</Text>
-      </View>
+      <View style={styles.leftSection}>
+        <View style={styles.rankingContainer}>
+          <Text style={styles.text}>{ranking}</Text>
+        </View>
 
-      <View style={styles.AvatarContainer}>
-        <Image
-          // Uses DiceBear API with seed-based avatar generation for scalable avatar system
-          source={{
-            uri: `https://api.dicebear.com/7.x/pixel-art/png?seed=${avatar}`,
-          }}
-          style={styles.avatarImage}
-          resizeMode="cover"
-        />
-      </View>
+        <View style={styles.AvatarContainer}>
+          <Image
+            // Uses DiceBear API with seed-based avatar generation for scalable avatar system
+            source={{
+              uri: `https://api.dicebear.com/7.x/pixel-art/png?seed=${avatar}`,
+            }}
+            style={styles.avatarImage}
+            resizeMode="cover"
+          />
+        </View>
 
-      <View style={styles.nameContainer}>
-        <Text style={[styles.text, styles.nameText]} numberOfLines={1}>
-          {name}
-        </Text>
+        <View style={styles.nameContainer}>
+          <Text style={[styles.text, styles.nameText]} numberOfLines={1}>
+            {name}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.scoreContainer}>
@@ -77,6 +79,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "#333333",
+  },
+  leftSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
   },
   rankingContainer: {
     width: 50,

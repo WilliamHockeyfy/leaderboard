@@ -20,12 +20,16 @@ export class LeaderboardRepository {
     callback: (users: LeaderboardUser[]) => void,
     onError?: (error: Error) => void,
   ): () => void {
-    return this.collection.orderBy("score", "desc").onSnapshot(
+    let q = this.collection.orderBy("score", "desc");
+    q = q.limit(10);
+
+    return q.onSnapshot(
       (snapshot) => {
         const users = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         })) as LeaderboardUser[];
+
         callback(users);
       },
       (error) => {

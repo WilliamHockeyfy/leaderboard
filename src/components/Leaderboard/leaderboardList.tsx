@@ -45,7 +45,7 @@ export default function LeaderboardList({
 const styles = StyleSheet.create({
   container: {
     maxWidth: "100%",
-    minWidth: "80%",
+    minWidth: "90%",
     maxHeight: "80%",
     borderWidth: 2,
     borderColor: "black",
