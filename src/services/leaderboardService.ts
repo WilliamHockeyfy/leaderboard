@@ -4,25 +4,14 @@ import { LeaderboardUser } from "../models/LeaderboardUser";
 /**
  * LeaderboardService class
  * @class LeaderboardService
- * @method getAllUsers - Get all users from the leaderboard
  * @method setDatabaseToMockData - Set the database to mock data for debugging
  */
 export class LeaderboardService {
   /**
-   * Get all users from the leaderboard
-   * @returns {Promise<LeaderboardUser[]>} All users in the leaderboard
-   */
-  /* deprecated with the implementation of subscribeToLeaderboard
-  async getAllUsers(): Promise<LeaderboardUser[]> {
-    return await leaderboardRepository.getAll();
-  }
-  */
-
-  /**
    * Subscribe to leaderboard database.
-   * @param {LeaderboardUser[]} users - The users
-   * @param {Error} error - potential error.
    * @returns {() => void} - The unsubscribe function.
+   * @param callback - callback with the users.
+   * @param onError - error details.
    */
   subscribeToLeaderboard(
     callback: (users: LeaderboardUser[]) => void,
@@ -44,4 +33,4 @@ export class LeaderboardService {
  * Singleton instance of LeaderboardService for business logic operations
  * @type {LeaderboardService}
  */
-export const leaderboardService = new LeaderboardService();
+export const leaderboardService: LeaderboardService = new LeaderboardService();

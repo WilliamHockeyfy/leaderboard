@@ -8,12 +8,13 @@ import {
 } from "react-native";
 import LeaderboardList from "./src/components/Leaderboard/leaderboardList";
 import { useLeaderboard } from "./src/hooks/useLeaderboard";
+import { JSX } from "react";
 
 /**
  * App component, shows the leaderboard.
  * @returns {JSX.Element} The App component
  */
-export default function App() {
+export default function App(): JSX.Element {
   const { users, loading, error, setDatabaseToMockData, settingDatabase } =
     useLeaderboard();
 

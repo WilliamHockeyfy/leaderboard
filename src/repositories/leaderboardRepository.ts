@@ -3,48 +3,24 @@ import { LeaderboardUser } from "../models/LeaderboardUser";
 import mockData from "../../assets/data/MOCK_DATA.json";
 
 /**
- * LeaderboardRepository class, resposible for direct communcation with the database.
+ * LeaderboardRepository class, responsible for direct communication with the database.
  * @class LeaderboardRepository
- * @method getAll - Get all users from the leaderboard
  * @returns {Promise<LeaderboardUser[]>} All users in the leaderboard
  */
 export class LeaderboardRepository {
   private collection = firestore().collection("leaderboard");
 
   /**
-   * Get all users from the leaderboard
-   * @returns {Promise<LeaderboardUser[]>} All users in the leaderboard
-   */
-  /* deprecated with the implementation of subscribeToLeaderboard
-  async getAll(): Promise<LeaderboardUser[]> {
-    try {
-      const snapshot = await this.collection
-        .orderBy('score', 'desc')
-        .get();
-
-      return snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-      })) as LeaderboardUser[];
-
-    } catch (error) {
-      console.error('Error fetching leaderboard:', error);
-      throw new Error('Failed to fetch leaderboard data');
-    }
-  }
-*/
-
-  /**
    * Subscribes to leaderboard database.
-   * @param {LeaderboardUser[]} users - The users
-   * @param {Error} error - potential error.
    * @returns {() => void} - The unsubscribe function.
+   * @param callback - callback for the users.
+   * @param onError - potential error
    */
   subscribeToLeaderboard(
     callback: (users: LeaderboardUser[]) => void,
     onError?: (error: Error) => void,
   ): () => void {
-    const unsubscribe = this.collection.orderBy("score", "desc").onSnapshot(
+    return this.collection.orderBy("score", "desc").onSnapshot(
       (snapshot) => {
         const users = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -62,8 +38,6 @@ export class LeaderboardRepository {
         }
       },
     );
-
-    return unsubscribe;
   }
 
   /**

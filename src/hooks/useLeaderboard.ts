@@ -12,20 +12,6 @@ export const useLeaderboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [settingDatabase, setSettingDatabase] = useState(false);
 
-  /* deprecated with the implementation of subscribeToLeaderboard
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const fetchedUsers = await leaderboardService.getAllUsers();
-      setUsers(fetchedUsers);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch leaderboard users');
-    } finally {
-      setLoading(false);
-    }
-  };
-*/
   /**
    * Handle realtime update
    * @param {LeaderboardUser[]} updatedUsers - The most recent users.

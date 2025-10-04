@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
 /**
@@ -12,7 +12,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 interface LeaderboardTileProps {
   score: number;
   name: string;
-  avatar?: number; // Number seed for dicebear avatars now. Uses seed instead of ID and can basically go infinitely.
+  avatar?: number; // Numerical seed for dicebear avatars.
   ranking?: number;
 }
 
@@ -25,7 +25,9 @@ interface LeaderboardTileProps {
  * @param {number} props.ranking - The ranking of the user
  * @returns {JSX.Element} The LeaderboardTile component
  */
-export default function LeaderboardTile(props: LeaderboardTileProps) {
+export default function LeaderboardTile(
+  props: LeaderboardTileProps,
+): JSX.Element {
   const { score = 100, name = "John Doe", avatar = 1, ranking = 1 } = props;
 
   return (

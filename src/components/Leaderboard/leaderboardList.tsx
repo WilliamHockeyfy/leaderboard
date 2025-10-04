@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import LeaderboardTile from "./leaderboardTile";
 import { LeaderboardUser } from "../../models/LeaderboardUser";
@@ -18,7 +18,9 @@ interface LeaderboardListProps {
  * @param {LeaderboardUser[]} props.users - The users to display in the leaderboard
  * @returns {JSX.Element} The LeaderboardList component
  */
-export default function LeaderboardList({ users = [] }: LeaderboardListProps) {
+export default function LeaderboardList({
+  users = [],
+}: LeaderboardListProps): JSX.Element {
   const hasUsers = users.length > 0;
 
   return (
