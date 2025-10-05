@@ -1,7 +1,8 @@
 import React, { JSX } from "react";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import LeaderboardTile from "./leaderboardTile";
 import { LeaderboardUser } from "../../models/LeaderboardUser";
+import LinearGradient from "react-native-linear-gradient";
 
 /**
  * LeaderboardListProps interface
@@ -24,21 +25,34 @@ export default function LeaderboardList({
   const hasUsers = users.length > 0;
 
   return (
-    <ScrollView style={styles.container}>
-      {hasUsers ? (
-        users.map((user, index) => (
-          <LeaderboardTile
-            key={user.id}
-            score={user.score}
-            name={user.username}
-            avatar={user.avatar}
-            ranking={index + 1}
-          />
-        ))
-      ) : (
-        <Text style={styles.errorText}>No users found</Text>
-      )}
-    </ScrollView>
+    <View style={styles.container}>
+      <LinearGradient
+        colors={["rgba(255,255,255,1)", "rgba(255,255,255,0)"]}
+        style={[styles.fade, { top: 0, height: 10 }]}
+        pointerEvents="none"
+      />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {hasUsers ? (
+          users.map((user, index) => (
+            <LeaderboardTile
+              key={user.id}
+              score={user.score}
+              name={user.username}
+              avatar={user.avatar}
+              ranking={index + 1}
+            />
+          ))
+        ) : (
+          <Text style={styles.errorText}>No users found</Text>
+        )}
+      </ScrollView>
+
+      <LinearGradient
+        colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]}
+        style={[styles.fade, { bottom: 0, height: 10 }]}
+        pointerEvents="none"
+      />
+    </View>
   );
 }
 
@@ -47,13 +61,18 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     minWidth: "90%",
     maxHeight: "80%",
-    borderWidth: 2,
-    borderColor: "black",
-    borderRadius: 10,
+
     flexDirection: "column",
-    padding: 10,
     margin: 5,
   },
+
+  fade: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    zIndex: 1,
+  },
+
   errorText: {
     color: "red",
     alignSelf: "center",

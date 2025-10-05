@@ -1,6 +1,6 @@
 import firestore from "@react-native-firebase/firestore";
 import { LeaderboardUser } from "../models/LeaderboardUser";
-import mockData from "../../assets/data/MOCK_DATA.json";
+import mockData from "../../assets/data/MOCK_DATA.json"; // Mock data generated using "https://www.mockaroo.com/"
 
 /**
  * LeaderboardRepository class, responsible for direct communication with the database.
@@ -21,7 +21,7 @@ export class LeaderboardRepository {
     onError?: (error: Error) => void,
   ): () => void {
     let q = this.collection.orderBy("score", "desc");
-    q = q.limit(10);
+    q = q.limit(30);
 
     return q.onSnapshot(
       (snapshot) => {

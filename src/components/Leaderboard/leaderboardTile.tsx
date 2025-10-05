@@ -31,15 +31,22 @@ export default function LeaderboardTile(
   const { score = 100, name = "John Doe", avatar = 1, ranking = 1 } = props;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, ranking === 1 && { borderTopWidth: 1 }]}>
       <View style={styles.leftSection}>
-        <View style={styles.rankingContainer}>
+        <View
+          style={[
+            styles.rankingContainer,
+            ranking === 1 && { backgroundColor: "gold" },
+            ranking === 2 && { backgroundColor: "silver" },
+            ranking === 3 && { backgroundColor: "#CD7F32" },
+          ]}
+        >
           <Text style={styles.text}>{ranking}</Text>
         </View>
 
         <View style={styles.AvatarContainer}>
           <Image
-            // Uses DiceBear API with seed-based avatar generation for scalable avatar system
+            // Uses DiceBear API with seed-based avatar generation for scalable avatar system, as a stand-in since no firebase storage.
             source={{
               uri: `https://api.dicebear.com/7.x/pixel-art/png?seed=${avatar}`,
             }}
@@ -70,14 +77,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
+    marginTop: 8,
     margin: 5,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "grey",
-    borderRadius: 50,
+    borderRadius: 10,
+    borderBottomWidth: 1,
   },
   text: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "bold",
     color: "#333333",
   },
   leftSection: {
@@ -91,8 +100,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
+    borderTopWidth: 2,
     borderColor: "grey",
-    borderRadius: 25,
+    borderRadius: 10,
   },
   AvatarContainer: {
     width: 50,
@@ -100,8 +110,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    marginLeft: 5,
-    borderColor: "black",
+    marginLeft: 10,
+    borderColor: "grey",
     borderRadius: 25,
   },
   nameContainer: {
