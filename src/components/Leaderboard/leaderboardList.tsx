@@ -50,7 +50,7 @@ export default function LeaderboardList({
             />
           ))
         ) : (
-          <Text style={styles.errorText}>No users found</Text>
+          <></>
         )}
       </ScrollView>
 

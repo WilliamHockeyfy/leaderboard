@@ -36,10 +36,12 @@ export const useLeaderboard = () => {
 
   /**
    * hard sets database to mock data.
+   * @returns {Promise<void>} Promise that resolves when database is set to mock data.
    */
   const setDatabaseToMockData = async () => {
     try {
       setSettingDatabase(true);
+      setLoading(true);
       setError(null);
       await leaderboardService.setDatabaseToMockData();
     } catch (err) {
@@ -53,14 +55,24 @@ export const useLeaderboard = () => {
     }
   };
 
-  const onDeleteUser = useCallback(async (id: string) => {
-    console.log("Deleting user in hook:", id);
-    try {
-      await leaderboardService.deleteUser(id);
-    } catch (error) {
-      handleError(error instanceof Error ? error : new Error('Failed to delete user'));
-    }
-  }, [handleError]);
+  /**
+   * Deletes a user from the leaderboard.
+   * @param {string} id - The id of the user to delete.
+   * @returns {Promise<void>} Promise that resolves when user is deleted.
+   */
+  const onDeleteUser = useCallback(
+    async (id: string) => {
+      console.log("Deleting user in hook:", id);
+      try {
+        await leaderboardService.deleteUser(id);
+      } catch (error) {
+        handleError(
+          error instanceof Error ? error : new Error("Failed to delete user"),
+        );
+      }
+    },
+    [handleError],
+  );
 
   useEffect(() => {
     setLoading(true);

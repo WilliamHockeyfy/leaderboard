@@ -56,8 +56,12 @@ export default function LeaderboardTile(
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  /**
+   * Toggles the menu.
+   * @returns {void}
+   */
   const toggleMenu = () => {
-    // A lot of variables here to limit the amount of menus being open to one.
+    // limit the amount of menus being open to one.
     if (anyMenuOpen && !isMenuOpen) {
       return;
     }
@@ -66,11 +70,13 @@ export default function LeaderboardTile(
     setIsMenuOpen(newMenuState);
     setAnyMenuOpen(newMenuState);
 
-    console.log("-------");
-    console.log("isMenu:" + newMenuState);
-    console.log("anyMenu:" + newMenuState);
   };
 
+  /**
+   * Handles the delete user.
+   * calls the given onDeleteUser function with the users id.
+   * @returns {void}
+   */
   const handleDeleteUser = () => {
     console.log("onDeleteUser", id);
     // double checks that the id exists

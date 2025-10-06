@@ -87,6 +87,11 @@ export class LeaderboardRepository {
     }
   }
 
+  /**
+   * Deletes a user from the leaderboard.
+   * @param {string} id - The id of the user to delete.
+   * @returns {Promise<void>} Promise that resolves when user is deleted.
+   */
   async deleteUser(id: string): Promise<void> {
     console.log("Deleting user in repository:", id);
 

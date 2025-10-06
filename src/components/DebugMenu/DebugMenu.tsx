@@ -15,6 +15,10 @@ const DebugMenu: React.FC<DebugMenuProps> = ({
 }: DebugMenuProps): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  /**
+   * Toggles the menu visibility.
+   * @returns {void}
+   */
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
