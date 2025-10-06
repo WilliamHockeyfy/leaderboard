@@ -1,10 +1,5 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Button,
-  TouchableOpacity,
-} from "react-native";
+import React, { JSX, useState } from "react";
+import { StyleSheet, View, Button, TouchableOpacity } from "react-native";
 
 interface DebugMenuProps {
   setDatabaseToMockData: () => void;
@@ -17,7 +12,7 @@ interface DebugMenuProps {
  */
 const DebugMenu: React.FC<DebugMenuProps> = ({
   setDatabaseToMockData,
-}) => {
+}: DebugMenuProps): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {

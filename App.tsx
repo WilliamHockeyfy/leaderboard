@@ -11,14 +11,14 @@ import LeaderboardList from "./src/components/Leaderboard/leaderboardList";
 import DebugMenu from "./src/components/DebugMenu/DebugMenu";
 import { useLeaderboard } from "./src/hooks/useLeaderboard";
 import React, { JSX } from "react";
-import { Ionicons } from "@expo/vector-icons";
 
 /**
  * App component, shows the leaderboard.
  * @returns {JSX.Element} The App component
  */
 export default function App(): JSX.Element {
-  const { users, loading, error, setDatabaseToMockData } = useLeaderboard();
+  const { users, loading, error, setDatabaseToMockData, onDeleteUser } =
+    useLeaderboard();
 
   if (loading) {
     return (
@@ -42,7 +42,7 @@ export default function App(): JSX.Element {
   return (
     <View style={styles.container}>
       <Text style={styles.Title}>Leaderboard</Text>
-      <LeaderboardList users={users} />
+      <LeaderboardList users={users} onDeleteUser={onDeleteUser} />
 
       <DebugMenu
         // connects the setMockdata function in the hook to the debugmenu button.

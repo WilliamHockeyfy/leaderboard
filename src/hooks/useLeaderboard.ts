@@ -53,6 +53,15 @@ export const useLeaderboard = () => {
     }
   };
 
+  const onDeleteUser = useCallback(async (id: string) => {
+    console.log("Deleting user in hook:", id);
+    try {
+      await leaderboardService.deleteUser(id);
+    } catch (error) {
+      handleError(error instanceof Error ? error : new Error('Failed to delete user'));
+    }
+  }, [handleError]);
+
   useEffect(() => {
     setLoading(true);
     /**
@@ -75,7 +84,7 @@ export const useLeaderboard = () => {
     loading,
     error,
     settingDatabase,
-
     setDatabaseToMockData,
+    onDeleteUser,
   };
 };

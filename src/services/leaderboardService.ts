@@ -25,7 +25,20 @@ export class LeaderboardService {
    * @returns {Promise<void>} Promise that resolves when database is set
    */
   async setDatabaseToMockData(): Promise<void> {
-    return await leaderboardRepository.setDatabase();
+    try {
+      return await leaderboardRepository.setDatabase();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    console.log("Deleting user in service:", id);
+    try {
+      return await leaderboardRepository.deleteUser(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

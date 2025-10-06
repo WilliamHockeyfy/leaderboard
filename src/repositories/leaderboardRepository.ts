@@ -86,10 +86,23 @@ export class LeaderboardRepository {
       throw new Error("Failed to set database to mock data");
     }
   }
+
+  async deleteUser(id: string): Promise<void> {
+    console.log("Deleting user in repository:", id);
+
+    try {
+      await this.collection.doc(id).delete();
+      console.log(`User with ID: ${id} deleted.`);
+    } catch (error) {
+      console.error(`Error deleting user document with ID: ${id}:`, error);
+      throw new Error("Failed to delete user document");
+    }
+  }
 }
 
 /**
  * Singleton instance of LeaderboardRepository for database operations
  * @type {LeaderboardRepository}
  */
-export const leaderboardRepository = new LeaderboardRepository();
+export const leaderboardRepository: LeaderboardRepository =
+  new LeaderboardRepository();

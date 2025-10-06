@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import React, { JSX, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import LeaderboardTile from "./leaderboardTile";
 import { LeaderboardUser } from "../../models/LeaderboardUser";
@@ -11,6 +11,7 @@ import LinearGradient from "react-native-linear-gradient";
  */
 interface LeaderboardListProps {
   users: LeaderboardUser[];
+  onDeleteUser: (id: string) => void;
 }
 
 /**
@@ -21,8 +22,10 @@ interface LeaderboardListProps {
  */
 export default function LeaderboardList({
   users = [],
+  onDeleteUser,
 }: LeaderboardListProps): JSX.Element {
   const hasUsers = users.length > 0;
+  const [anyMenuOpen, setAnyMenuOpen] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -40,6 +43,10 @@ export default function LeaderboardList({
               name={user.username}
               avatar={user.avatar}
               ranking={index + 1}
+              id={user.id}
+              onDeleteUser={onDeleteUser}
+              setAnyMenuOpen={setAnyMenuOpen}
+              anyMenuOpen={anyMenuOpen}
             />
           ))
         ) : (

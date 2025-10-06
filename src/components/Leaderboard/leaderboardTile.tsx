@@ -1,5 +1,14 @@
-import React, { JSX } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React, { JSX, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Button,
+  TouchableOpacity,
+} from "react-native";
+import { TouchableRipple } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
 
 /**
  * LeaderboardTileProps interface
@@ -8,12 +17,18 @@ import { View, Text, StyleSheet, Image } from "react-native";
  * @property {string} name - The name of the user
  * @property {number} avatar - The avatar of the user
  * @property {number} ranking - The ranking of the user
+ * @property {string} id - The unique identifier of the user
+ * @property {function} onDeleteUser - Function to call when delete button is pressed
  */
 interface LeaderboardTileProps {
   score: number;
   name: string;
   avatar?: number; // Numerical seed for dicebear avatars.
   ranking?: number;
+  id?: string;
+  onDeleteUser?: (id: string) => void;
+  setAnyMenuOpen: (open: boolean) => void;
+  anyMenuOpen: boolean;
 }
 
 /**
@@ -28,10 +43,64 @@ interface LeaderboardTileProps {
 export default function LeaderboardTile(
   props: LeaderboardTileProps,
 ): JSX.Element {
-  const { score = 100, name = "John Doe", avatar = 1, ranking = 1 } = props;
+  const {
+    score = 100,
+    name = "John Doe",
+    avatar = 1,
+    ranking = 1,
+    id = null,
+    onDeleteUser,
+    setAnyMenuOpen,
+    anyMenuOpen,
+  } = props;
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    // A lot of variables here to limit the amount of menus being open to one.
+    if (anyMenuOpen && !isMenuOpen) {
+      return;
+    }
+
+    const newMenuState = !isMenuOpen;
+    setIsMenuOpen(newMenuState);
+    setAnyMenuOpen(newMenuState);
+
+    console.log("-------");
+    console.log("isMenu:" + newMenuState);
+    console.log("anyMenu:" + newMenuState);
+  };
+
+  const handleDeleteUser = () => {
+    console.log("onDeleteUser", id);
+    // double checks that the id exists
+    if (onDeleteUser && id) {
+      onDeleteUser(id);
+      setIsMenuOpen(false); // Closes the menu
+      setAnyMenuOpen(false); // Reset the shared variable
+    }
+  };
 
   return (
-    <View style={[styles.container, ranking === 1 && { borderTopWidth: 1 }]}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={toggleMenu}
+      style={[styles.container, ranking === 1 && { borderTopWidth: 1 }]}
+    >
+      {isMenuOpen && (
+        <View style={styles.extrasPanel}>
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={handleDeleteUser}
+          >
+            <Text style={styles.menuButtonText}>Delete User</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuButton} onPress={toggleMenu}>
+            <Ionicons name="close" size={30} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      )}
+
       <View style={styles.leftSection}>
         <View
           style={[
@@ -61,13 +130,12 @@ export default function LeaderboardTile(
           </Text>
         </View>
       </View>
-
       <View style={styles.scoreContainer}>
         <Text style={styles.text} numberOfLines={1}>
           {score}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -140,5 +208,29 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 25,
+  },
+  extrasPanel: {
+    flexDirection: "row",
+    width: "100%",
+    height: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.45)",
+    margin: 10,
+    position: "absolute",
+    zIndex: 25,
+  },
+  menuButton: {
+    backgroundColor: "rgb(27, 153, 165)",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  menuButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
